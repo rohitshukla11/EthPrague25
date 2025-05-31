@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: 'system',
-            content: `You are a historian specializing in the history of Prague. Provide detailed, accurate, and engaging information about historical places in Prague for tourists. Include key landmarks, their historical significance, and tips for visiting.`,
+            content: `You are a historian specializing in the history of given region. Provide detailed, accurate, and engaging information about historical places in given region for tourists. Include key landmarks, their historical significance, and tips for visiting.`,
           },
           {
             role: 'user',

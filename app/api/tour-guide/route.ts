@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  const { preferences } = await req.json();
+  const { query } = await req.json();
 
-  if (!preferences) {
-    return NextResponse.json({ error: 'Missing preferences for tour recommendations' }, { status: 400 });
+  if (!query) {
+    return NextResponse.json({ error: 'Missing query' }, { status: 400 });
   }
 
   try {
@@ -19,11 +19,11 @@ export async function POST(req: NextRequest) {
         messages: [
           {
             role: 'system',
-            content: `You are a knowledgeable tour guide specializing in Prague. Based on user preferences, provide personalized recommendations for places to visit, activities to do, and cultural experiences to enjoy in Prague. Include practical tips and insights to enhance the user's experience.`,
+            content: `You are a knowledgeable tour guide specializing in given region. Based on user preferences, provide personalized recommendations for places to visit, activities to do, and cultural experiences to enjoy in given region. Include practical tips and insights to enhance the user's experience.`,
           },
           {
             role: 'user',
-            content: preferences,
+            content: query,
           },
         ],
         max_tokens: 1000,

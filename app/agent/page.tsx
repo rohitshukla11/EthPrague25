@@ -1,116 +1,147 @@
 // app/ui/page.tsx
 
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Page() {
     const [circular, setCircular] = useState(false);
     const [loading, setLoading] = useState(false);
     const [agent, setAgent] = useState(0);
-
+    const [userInput, setUserInput] = useState("");
+    const [userPersona, setUserPersona] = useState("");
+    const [result, setResult] = useState("");
     // For circular layout: calculate positions
     const radius = 250; // radius of the circle (increased for gap)
     const center = { x: 160, y: 160 };
     const circleCount = 5;
     const circleSize = 80;
 
+    const agentZero = "Master Agent distributing tasks to sub-agents ..."
     const agentOne = "Historian Agent gathering data ..."
     const agentTwo = "Tour Guide Agent finding tourist destinations ..."
     const agentThree = "Translator Agent translating data to user language ..."
     const agentFour = "Itinerary Planner Agent generating itinerary ..."
 
-    const displayText = [agentOne, agentTwo, agentThree, agentFour]
+    const displayText = [agentZero, agentOne, agentTwo, agentThree, agentFour]
 
     const agentOneImage = "/agents/one.png"
     const agentTwoImage = "/agents/two.png"
     const agentThreeImage = "/agents/three.png"
     const agentFourImage = "/agents/four.png"
-    const agentFiveImage = "/agents/four.png"
+    const agentZeroImage = "/agents/four.png"
 
-    const displayImage = [agentOneImage, agentTwoImage, agentThreeImage, agentFourImage, agentFiveImage]
+    const displayImage = [agentZeroImage, agentOneImage, agentTwoImage, agentThreeImage, agentFourImage, agentZeroImage]
 
-    const handleAgentCall = async () => {
-        
+    useEffect(() => {
+        fetch('https://gateway.lighthouse.storage/ipfs/bafkreihnww7qeiztt2qh5se5raqkrgg54gs7gypn7w73etphqr3rsmquvm')
+            .then(res => res.json())
+            .then(data => setUserPersona(data))
+            .catch(console.error);
+    }, []);
+
+    const handleAgentCall = async (userInput: string) => {
+        setAgent(0);
+        console.log(agent)
         setCircular(true)
 
         try {
             // Call Agent One
             setAgent(1);
-            console.log('Calling Agent One...');
+            console.log(userInput)
+            const masterresponse = await fetch('/api/master', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query: userInput }),
+            });
+
+            if (!masterresponse.ok) {
+                throw new Error('Failed to fetch Agent 1 data');
+            }
+
+            const masterData = await masterresponse.json();
+            const parsedData = masterData.itinerary;
+            console.log('Master response:', masterData.itinerary);
+
+
+            // Call Agent Two
+            setAgent(2);
 
             const response = await fetch('/api/historian', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+                body: JSON.stringify({ query: `Generate detailed history for Prague City` }),
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch historical information');
+                throw new Error('Failed to fetch Agent 2 data');
             }
 
-            const data = await response.json();
-            console.log('Historian response:', data);
+            const historydata = await response.json();
+            console.log('Historian response:', historydata);
 
-            // Call Agent Two
-            setAgent(2);
-            console.log('Calling Agent Two...');
+            // Call Agent Three
+            setAgent(3);
 
             const agentTwoResponse = await fetch('/api/tour-guide', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+                body: JSON.stringify({ query: `Generate the content for Prague Tourist Guideance based on the user persona specified here ${userPersona}` }),
             });
 
             if (!agentTwoResponse.ok) {
-                throw new Error('Failed to fetch historical information');
+                throw new Error('Failed to fetch Agent 3 data');
             }
 
             const dataAgentTwo = await agentTwoResponse.json();
             console.log('Historian response:', dataAgentTwo);
 
-            // Call Agent Three
-            setAgent(3);
-            console.log('Calling Agent Three...');
-            const agentThreeResponse = await fetch('/api/language-translator', {
+            // Call Agent Four
+            setAgent(4);
+
+            const agentThreeResponse = await fetch('/api/itinerary-planner', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+                body: JSON.stringify({ query: `Generate personalized itinerary for Prague 3 days as per the user persona - ${userPersona} and include details for each place based on the historical data - ${historydata} and tourist guide data - ${dataAgentTwo} return the result to user` }),
             });
 
             if (!agentThreeResponse.ok) {
-                throw new Error('Failed to fetch historical information');
+                throw new Error('Failed to fetch Agent 4 data');
             }
 
             const dataAgentThree = await agentThreeResponse.json();
-            console.log('Historian response:', dataAgentThree);
+            console.log('Itineary response:', dataAgentThree);
 
-            // Call Agent Four
-            setAgent(4);
-            console.log('Calling Agent Four...');
-            const agentFourResponse = await fetch('/api/itinerary-planner', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
-            });
+            // Call Agent Five
+            setAgent(5);
 
-            if (!agentThreeResponse.ok) {
-                throw new Error('Failed to fetch historical information');
-            }
+            // const agentFourResponse = await fetch('/api/language-translator', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ query: `Read the Iterenary provided here - ${dataAgentThree.itinerary} return the result in the English` }),
+            // });
 
-            const dataAgentFour = await agentFourResponse.json();
-            console.log('Historian response:', dataAgentFour);
+            // if (!agentThreeResponse.ok) {
+            //     throw new Error('Failed to fetch Agent 5 data');
+            // }
+
+            // const dataAgentFour = await agentFourResponse.json();
+            // console.log('Final response:', dataAgentFour);
+            setResult(dataAgentThree.itinerary);
+
             setLoading(true)
         } catch (error) {
-            console.error('Error fetching historian data:', error);
+            console.error('Error fetching agents data:', error);
         }
     };
 
@@ -153,12 +184,61 @@ export default function Page() {
                             }}
                         >
                             <h1 style={{ fontSize: '22px', marginBottom: '2rem', color: '#996515', textAlign: 'right' }}>Here's your iternary</h1>
-                            <p>
-                                Welcome to the Pixel Castle!<br /><br />
-                                Here you will find a world of adventure, mystery, and pixelated wonders. As you wait, imagine the grand halls, the echo of footsteps on stone, and the glimmer of torches lighting the way.<br /><br />
-                                The castle is full of secrets, hidden rooms, and treasures waiting to be discovered. Prepare yourself for a journey through time, where every brick tells a story and every shadow hides a legend.<br /><br />
-                                Thank you for your patience. Your adventure will begin soon!
-                            </p>
+                            <div style={{ 
+                                whiteSpace: 'pre-wrap',
+                                fontFamily: "'Press Start 2P', 'Share Tech Mono', monospace",
+                                fontSize: '14px',
+                                lineHeight: '1.6',
+                                color: '#e6ccb2',
+                                background: 'rgba(26,18,7,0.92)',
+                                padding: '2rem',
+                                borderRadius: '12px',
+                                boxShadow: '8px 8px 0 #5c4326',
+                                maxHeight: '70vh',
+                                overflowY: 'auto',
+                                border: '4px solid #996515',
+                                backgroundImage: "linear-gradient(45deg, #2d1a07 25%, transparent 25%, transparent 75%, #2d1a07 75%), linear-gradient(45deg, #2d1a07 25%, transparent 25%, transparent 75%, #2d1a07 75%)",
+                                backgroundSize: "16px 16px",
+                                backgroundPosition: "0 0, 8px 8px",
+                            }}>
+                                {result.split('**').map((part, index) => {
+                                    if (index % 2 === 1) {
+                                        return <strong key={index} style={{ 
+                                            color: '#996515',
+                                            textShadow: '2px 2px 0 #5c4326'
+                                        }}>{part}</strong>;
+                                    }
+                                    return part;
+                                }).map((part, index) => {
+                                    const text = typeof part === 'string' ? part : '';
+                                    if (text.includes('###')) {
+                                        return <h2 key={index} style={{ 
+                                            color: '#996515', 
+                                            fontSize: '18px', 
+                                            marginTop: '1.5rem',
+                                            marginBottom: '1rem',
+                                            textShadow: '2px 2px 0 #5c4326',
+                                            borderBottom: '2px solid #996515',
+                                            paddingBottom: '0.5rem'
+                                        }}>{text.replace('###', '')}</h2>;
+                                    }
+                                    if (text.includes('*Travel Tip:*')) {
+                                        return <p key={index} style={{ 
+                                            color: '#bfa76a',
+                                            fontStyle: 'italic',
+                                            marginTop: '0.5rem',
+                                            marginBottom: '1rem',
+                                            padding: '0.5rem',
+                                            borderLeft: '4px solid #996515',
+                                            background: 'rgba(153, 101, 21, 0.1)'
+                                        }}>{text}</p>;
+                                    }
+                                    return <p key={index} style={{ 
+                                        marginBottom: '0.5rem',
+                                        textShadow: '1px 1px 0 #5c4326'
+                                    }}>{text}</p>;
+                                })}
+                            </div>
                         </div>
                     </div>
                 ) : <>
@@ -185,12 +265,14 @@ export default function Page() {
                                             fontSize: "16px",
                                             borderRight: "4px solid #996515",
                                         }}
+                                        onChange={(e) => setUserInput(e.target.value)}
+                                        value={userInput}
                                         placeholder="Where to visit ..."
                                         name="text"
                                         type="text"
                                     />
                                     <button
-                                        onClick={handleAgentCall}
+                                        onClick={() => handleAgentCall(userInput)}
                                         className="h-full px-6 bg-[#996515] text-[#fff8e1] border-l-4 border-[#5c4326] font-bold"
                                         style={{
                                             fontFamily: "'Press Start 2P', 'Share Tech Mono', monospace",
@@ -250,7 +332,6 @@ export default function Page() {
                             </div>
                             {/* 5 small circles */}
                             {[...Array(circleCount)].map((_, i) => {
-                                // Distribute over semicircle: -90deg to +90deg
                                 const angle = (-Math.PI / 2) + (i * Math.PI / (circleCount - 1));
                                 const x = center.x + radius * Math.cos(angle) - circleSize / 2;
                                 const y = center.y + radius * Math.sin(angle) - circleSize / 2;
@@ -294,7 +375,7 @@ export default function Page() {
                                 minWidth: '320px',
                             }}
                         >
-                            {displayText[agent]}
+                            {displayText[agent - 1]}
                         </div>
                     )}
                 </>}
