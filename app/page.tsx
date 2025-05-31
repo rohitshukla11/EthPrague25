@@ -1,34 +1,100 @@
-import React from "react";
+"use client";
+import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { HeroBanner, FooterBanner } from "../components";
 
-interface AgentCardProps {
-  name: string;
-  description: string;
-  image: string;
-  link: string;
-}
-
-const AgentCard: React.FC<AgentCardProps> = ({ name, description, image, link }) => (
-  <Link href={link} className="block bg-white rounded-3xl p-6 shadow-sm hover:shadow-md transition-all">
-    {image && (
-      <div className="relative h-48 w-full mb-4 rounded-2xl overflow-hidden">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          style={{ objectFit: 'cover' }}
-          className="hover:scale-105 transition-transform duration-300"
-        />
-      </div>
-    )}
-    <h3 className="text-2xl font-bold text-gray-900">{name}</h3>
-    <p className="text-gray-600 mt-2">{description}</p>
-  </Link>
-);
-
 export default function Home() {
+
+  const [agent, setAgent] = useState(0);
+  
+  const handleAgentCall = async () => {
+
+    try {
+      // Call Agent One
+      setAgent(1);
+      console.log('Calling Agent One...');
+
+      const response = await fetch('/api/historian', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch historical information');
+      }
+
+      const data = await response.json();
+      console.log('Historian response:', data);
+      alert(`Historian response: ${data.history}`);
+
+      // Call Agent Two
+      setAgent(2);
+      console.log('Calling Agent Two...');
+
+      const agentTwoResponse = await fetch('/api/tour-guide', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+      });
+
+      if (!agentTwoResponse.ok) {
+        throw new Error('Failed to fetch historical information');
+      }
+
+      const dataAgentTwo = await agentTwoResponse.json();
+      console.log('Historian response:', dataAgentTwo);
+      alert(`Historian response: ${dataAgentTwo.history}`);
+
+      // Call Agent Three
+      setAgent(3);
+      console.log('Calling Agent Three...');
+      const agentThreeResponse = await fetch('/api/language-translator', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+      });
+
+      if (!agentThreeResponse.ok) {
+        throw new Error('Failed to fetch historical information');
+      }
+
+      const dataAgentThree = await agentThreeResponse.json();
+      console.log('Historian response:', dataAgentThree);
+      alert(`Historian response: ${dataAgentThree.history}`);
+
+      // Call Agent Four
+      setAgent(4);
+      console.log('Calling Agent Four...');
+      const agentFourResponse = await fetch('/api/itinerary-planner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: 'Tell me about the history of Prague.' }),
+      });
+
+      if (!agentThreeResponse.ok) {
+        throw new Error('Failed to fetch historical information');
+      }
+
+      const dataAgentFour = await agentFourResponse.json();
+      console.log('Historian response:', dataAgentFour);
+      alert(`Historian response: ${dataAgentFour.history}`);
+
+    } catch (error) {
+      console.error('Error fetching historian data:', error);
+      alert('Failed to fetch historical information.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -57,36 +123,23 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <AgentCard
-              name="Architectural Analyst"
-              description="Analyzes historical structures and provides restoration insights."
-              image="/assets/agents/architect.png"
-              link="/agent/architect"
-            />
-            <AgentCard
-              name="Cultural Historian"
-              description="Preserves cultural narratives and historical significance."
-              image="/assets/agents/historian.png"
-              link="/agent/historian"
-            />
-            <AgentCard
-              name="Network Engineer"
-              description="Maintains the connectivity of historical sites and pathways."
-              image="/assets/agents/engineer.png"
-              link="/agent/engineer"
-            />
-            <AgentCard
-              name="Environmental Specialist"
-              description="Ensures sustainable preservation of natural surroundings."
-              image="/assets/agents/environment.png"
-              link="/agent/environment"
-            />
-            <AgentCard
-              name="Community Liaison"
-              description="Engages with local communities to gather insights and support."
-              image="/assets/agents/community.png"
-              link="/agent/community"
-            />
+            <div
+              onClick={handleAgentCall}
+              className={"block bg-white rounded-3xl p-6 shadow-sm hover:shadow-md transition-all"}
+            >
+              <div className="relative h-48 w-full mb-4 rounded-2xl overflow-hidden">
+                <Image
+                  src={"/assets/agents/historian.png"}
+                  alt={"name"}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+
+              <h3 className="text-2xl font-bold text-gray-900">name</h3>
+              <p className="text-gray-600 mt-2">description</p>
+            </div>
           </div>
         </div>
       </div>
