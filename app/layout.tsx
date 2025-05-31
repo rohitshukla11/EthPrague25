@@ -17,18 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div className="layout">
-          <header>
-            <Navbar />
-          </header>
-          <main className="main-container">
+        <div className="bg-black">
+          <main>
             <Providers>
               {children}
             </Providers>
           </main>
-          <footer>
-            <Footer />
-          </footer>
         </div>
       </body>
     </html>
