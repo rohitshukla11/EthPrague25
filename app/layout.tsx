@@ -5,8 +5,8 @@ import Footer from "../components/Footer";
 import { Providers } from "./providers";
 
 export const metadata = {
-  title: 'KKP Store',
-  description: 'Your one-stop shop for design assets',
+  title: 'PrahaVerse',
+  description: 'Your one-stop application for exploring Prague, offering personalized itineraries, tour recommendations, and historical insights.',
 };
 
 export default function RootLayout({
