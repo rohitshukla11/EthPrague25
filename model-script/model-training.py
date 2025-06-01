@@ -47,7 +47,7 @@ except ImportError:
         BRIGHT = DIM = NORMAL = RESET_ALL = ""
 
 # Lighthouse API configuration
-API_KEY = "d8a223eb.db12af24f2b848b09cf21c37bfa887ed"  # Replace with your actual API key
+API_KEY = ""  # Replace with your actual API key
 LIGHTHOUSE_API_BASE = "https://node.lighthouse.storage"
 
 # List of your Prague monument JSON file CIDs
