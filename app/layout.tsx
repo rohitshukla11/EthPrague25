@@ -1,11 +1,9 @@
 import "../styles/globals.css";
 import React from "react";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { Providers } from "./providers";
 
 export const metadata = {
-  title: 'PrahaVerse',
+  title: 'trdelnik.ai',
   description: 'Your one-stop application for exploring Prague, offering personalized itineraries, tour recommendations, and historical insights.',
 };
 

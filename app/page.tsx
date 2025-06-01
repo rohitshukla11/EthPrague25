@@ -2,7 +2,7 @@
 import React, {useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { HeroBanner, FooterBanner } from "../components";
+import { HeroBanner} from "../components";
 
 export default function Home() {
 
@@ -178,7 +178,6 @@ export default function Home() {
       </div>
 
       {/* Final CTA */}
-      <FooterBanner />
     </div>
   );
 }

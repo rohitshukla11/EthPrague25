@@ -6,49 +6,36 @@ import Image from 'next/image';
 
 const HeroBanner: React.FC = () => {
   return (
-    <div className="bg-gradient-to-b text-gray-900">
-      {/* Hero Section */}
-      <section>
-        <div className="px-10 py-24 bg-softPurple rounded-2xl relative h-[500px] leading-[0.9] w-full">
-          <div>
-            <div className="relative h-[150px] w-[150px]">
-              <Image
-                src="/assets/images/logo.png"
-                alt="welcome"
-                fill
-                className="object-contain ml-[-5px]"
-              />
-            </div>
-            <div className="absolute top-0 right-[5%] h-full w-[500px]">
-              <Image
-                src="/assets/images/ipixel.png"
-                alt="welcome"
-                fill
-                className="object-contain"
-              />
-            </div>
+    <div className="relative bg-gradient-to-b text-gray-900 min-h-screen">
+      {/* Full-page background image */}
+      <div className="absolute inset-0">
+        <Image
+          src="/assets/images/logo.png"
+          alt="Preserving Prague's Historical Network"
+          fill
+          className="object-cover"
+        />
+      </div>
 
-            <div>
-              <h2 className="text-[2.5rem] font-semibold mt-6 font-funnel ">
-                Preserving Prague's Historical Network.
-              </h2>
-              <div className="py-4 w-450 leading-[1.3] flex flex-col text-textDark">
-                <p className="text-textMuted font-light text-left font-funnel">
-                  Explore how agents collaborate to maintain and restore the intricate historical network of Prague, ensuring its cultural and architectural legacy endures for generations.
-                </p>
-              </div>
-            </div>
-          </div>
-          <Link href="/explore">
+      {/* Content Section */}
+      <div className="relative z-10 flex flex-col items-center justify-end min-h-screen text-center px-6 pb-10">
+        <div className="bg-black bg-opacity-50 p-6 rounded-lg">
+          <h2 className="text-[3rem] font-semibold font-funnel text-white">
+            Preserving Prague's Historical Network.
+          </h2>
+          <p className="text-textMuted font-light mt-4 font-funnel text-white text-lg max-w-3xl">
+            Explore how agents collaborate to maintain and restore the intricate historical network of Prague, ensuring its cultural and architectural legacy endures for generations.
+          </p>
+          <Link href="/agent">
             <button
               type="button"
-              className="font-funnel bottom-[5%] mt-4 px-4 py-2 bg-primary text-white rounded-xl text-lg font-medium cursor-pointer z-[10000]"
+              className="font-funnel mt-6 px-6 py-3 bg-primary text-white rounded-xl text-lg font-medium cursor-pointer"
             >
               Discover More
             </button>
           </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 };
